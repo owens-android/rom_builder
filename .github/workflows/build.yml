@@ -5,8 +5,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Forzamos Ubuntu 22.04 para compatibilidad con dependencias de Android
+    runs-on: ubuntu-22.04
     steps:
+      - name: Autenticar y preparar repositorio
+        uses: actions/checkout@v4
+
       - name: Limpiar espacio en disco
         run: |
           sudo rm -rf /usr/share/dotnet
@@ -32,7 +35,7 @@ jobs:
         run: |
           mkdir android-workspace && cd android-workspace
           ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs
-          git clone https://github.com/TU_USUARIO/local_manifests .repo/local_manifests
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TU_USUARIO/local_manifests.git .repo/local_manifests
           ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
       - name: Compilar ROM
