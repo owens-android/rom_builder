@@ -10,13 +10,16 @@ jobs:
       - name: Autenticar y preparar repositorio
         uses: actions/checkout@v4
 
-      - name: Limpiar espacio en disco
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          echo "Espacio liberado."
+      - name: Limpieza profunda de disco
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 2048
+          swap-size-mb: 1
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
 
       - name: Configurar entorno de Android
         run: |
@@ -31,12 +34,12 @@ jobs:
           git config --global user.name "${{ github.repository_owner }}"
           git config --global user.email "${{ github.repository_owner }}@users.noreply.github.com"
 
-      - name: Sincronizar fuentes de LineageOS y Vili
+      - name: Sincronizar fuentes de LineageOS y Vili (Modo Ligero)
         run: |
           mkdir android-workspace && cd android-workspace
-          ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs
+          ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs --depth=1
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/local_manifests.git .repo/local_manifests
-          ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+          ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --current-branch
 
       - name: Compilar ROM
         run: |
