@@ -28,14 +28,14 @@ jobs:
           mkdir -p ~/bin
           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
           chmod a+x ~/bin/repo
-          git config --global user.name "owens-android"
-          git config --global user.email "jlorito8@gmail.com"
+          git config --global user.name "${{ github.repository_owner }}"
+          git config --global user.email "${{ github.repository_owner }}@users.noreply.github.com"
 
       - name: Sincronizar fuentes de LineageOS y Vili
         run: |
           mkdir android-workspace && cd android-workspace
           ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-20.0 --git-lfs
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/TU_USUARIO/local_manifests.git .repo/local_manifests
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/local_manifests.git .repo/local_manifests
           ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
       - name: Compilar ROM
