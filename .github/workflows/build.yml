@@ -7,18 +7,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Liberar espacio en disco
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
-          android: true
-          dotnet: true
-          haskell: true
+      - name: Limpiar espacio en disco
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          echo "Espacio liberado manualmente."
 
       - name: Configurar entorno de Android
         run: |
-          sudo apt-get update
-          sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32z1-dev libelf-dev libgl1-mesa-dev libxml2-utils xsltproc zip zlib1g-dev
+          sudo apt-get update || true
+          sudo apt-get install -y --fix-missing bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32z1-dev libelf-dev libgl1-mesa-dev libxml2-utils xsltproc zip zlib1g-dev
 
       - name: Instalar Repo
         run: |
