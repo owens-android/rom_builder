@@ -42,7 +42,7 @@ jobs:
       - name: Sincronizar fuentes de LineageOS y Vili (Modo Ultraligero)
         run: |
           cd ~/android-workspace
-          ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-21.0 --git-lfs --depth=1
+          ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-19.1 --git-lfs --depth=1
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/local_manifests.git .repo/local_manifests
           ~/bin/repo sync -c -j4 --force-sync --no-clone-bundle --no-tags --current-branch --fail-fast
 
