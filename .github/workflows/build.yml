@@ -46,6 +46,21 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/local_manifests.git .repo/local_manifests
           ~/bin/repo sync -c -j4 --force-sync --no-clone-bundle --no-tags --current-branch --fail-fast
 
+      - name: Eliminar bloques incompatibles de Android 13
+        run: |
+          cd ~/android-workspace
+          python3 -c '
+          import re, os
+          path = "vendor/xiaomi/sm8350-common/Android.bp"
+          if os.path.exists(path):
+              with open(path, "r") as f:
+                  content = f.read()
+              cleaned = re.sub(r"install_symlink\s*\{[^}]*\}", "", content)
+              with open(path, "w") as f:
+                  f.write(cleaned)
+              print("Archivo Android.bp parcheado con exito.")
+          '
+
       - name: Compilar ROM
         run: |
           cd ~/android-workspace
