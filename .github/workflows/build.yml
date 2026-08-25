@@ -46,14 +46,6 @@ jobs:
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository_owner }}/local_manifests.git .repo/local_manifests
           ~/bin/repo sync -c -j4 --force-sync --no-clone-bundle --no-tags --current-branch --fail-fast
 
-          - name: Parchear incompatibilidad de install_symlink para Android 12
-        run: |
-          cd ~/android-workspace
-          if [ -f "vendor/xiaomi/sm8350-common/Android.bp" ]; then
-            echo "Eliminando bloques install_symlink incompatibles..."
-            sed -i '/install_symlink {/,/}/d' vendor/xiaomi/sm8350-common/Android.bp || true
-          fi
-
       - name: Compilar ROM
         run: |
           cd ~/android-workspace
